@@ -1,14 +1,26 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const cors = require("cors");
+require("dotenv").config();
+
+const reservationRoutes = require("./routes/reservation");
+const contactRoutes = require("./routes/contact");
 
 const app = express();
+
+app.get("/", (req, res) => {
+  res.send("Backend is Running 🚀");
+});
 
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Restaurant backend is running 🚀");
-});
+app.use("/api/reservations", reservationRoutes);
+app.use("/api/contact", contactRoutes);
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.log(err));
 
 const PORT = process.env.PORT || 5000;
 
